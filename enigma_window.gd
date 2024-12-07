@@ -30,48 +30,26 @@ func setup_neighbors(top_window, right_window, bottom_window, left_window):
 func _test() -> void:
 	print("test")
 
-var done = false
+var piece_fitted = false
 func _process(delta: float) -> void:
-	if (not has_focus()):
+	if not has_focus():
 		return
-	if (done):
-		print("uga")
-	if top_window != null:
-		var distanceY = abs(position.y - top_window.position.y - size.y)
-		var distanceX = abs(position.x - top_window.position.x)
-		print("TOP ----------------------------------------------------------------")
-		print("distanceX", distanceX, "curr", position, "right", top_window.position)
-		print("distanceY", distanceY, "curr", position, "right", top_window.position)
-		done = distanceY <= 15 && distanceX <= 2
-	if right_window != null:
-		var distanceY = abs(position.y - right_window.position.y)
-		var distanceX = abs(position.x - right_window.position.x + size.x)
-		print("RIGHT ----------------------------------------------------------------")
-		print("distanceX", distanceX, "curr", position, "right", right_window.position)
-		print("distanceY", distanceY, "curr", position, "right", right_window.position)
-		done = distanceY <= 2 && distanceX <= 2
-	if bottom_window != null:
-		var distanceY = abs(position.y - bottom_window.position.y + size.y)
-		var distanceX = abs(position.x - bottom_window.position.x)
-		print("BOTTOM ----------------------------------------------------------------")
-		print("distanceX ", distanceX, " curr ", position, " bottom ", bottom_window.position)
-		print("distanceY ", distanceY, " curr ", position, " bottom ", bottom_window.position)
-		done = distanceY <= 15 && distanceX <= 2
-	if left_window != null:
-		var distanceY = abs(position.y - left_window.position.y)
-		var distanceX = abs(position.x - left_window.position.x - size.x)
-		print("LEFT ----------------------------------------------------------------")
-		print("distanceX", distanceX, "curr", position, "left", left_window.position)
-		print("distanceY", distanceY, "curr", position, "left", left_window.position)
-		done = distanceY <= 2 && distanceX <= 2
 
+	if piece_fitted:
+		print("all pieces are near!")
+	var is_top_close = calculate_distance_and_check(top_window, 0, -size.y, 2, 15)
+	var is_right_close = calculate_distance_and_check(right_window, size.x, 0, 15, 2)
+	var is_bottom_close = calculate_distance_and_check(bottom_window, 0, size.y, 2, 15)
+	var is_left_close = calculate_distance_and_check(left_window, -size.x, 0, 15, 2)
+
+	piece_fitted = is_top_close && is_right_close && is_bottom_close && is_left_close
 
 func calculate_distance_and_check(window, offset_x, offset_y, threshold_x, threshold_y):
 	if window == null:
-		return null
+		return true
 	var distanceY = abs(position.y - window.position.y + offset_y)
 	var distanceX = abs(position.x - window.position.x + offset_x)
-	print(window.name.upper() + "---------------------------------------------------------")
+	print(window.name + "---------------------------------------------------------")
 	print("distanceX: ", distanceX, "curr: ", position, " window:", window.position)
 	print("distanceY: ", distanceY, "curr: ", position, " window:", window.position)
 	return distanceY <= threshold_y and distanceX <= threshold_x
