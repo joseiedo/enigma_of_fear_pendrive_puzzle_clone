@@ -5,19 +5,18 @@ signal window_in_correct_position
 const EnigmaWindow = preload("res://enigma_window.gd")
 @onready var end_game_window: Window = $EndGameWindow
 
-
 var windows = {
-	"top_middle": {"pos": Vector2(193, 200), "neighbors": [null, "top_right", "middle_middle", "top_left"]},
-	"top_left": {"pos": Vector2(193, 147), "neighbors": [null, "top_middle", "middle_left", null]},
-	"top_right": {"pos": Vector2(800, 450), "neighbors": [null, null, "middle_right", "top_middle"]},
+	"top_middle": {"pos": Vector2i(193, 200), "neighbors": [null, "top_right", "middle_middle", "top_left"]},
+	"top_left": {"pos": Vector2i(193, 147), "neighbors": [null, "top_middle", "middle_left", null]},
+	"top_right": {"pos": Vector2i(800, 450), "neighbors": [null, null, "middle_right", "top_middle"]},
 
-	"middle_left": {"pos": Vector2(200, 160), "neighbors": ["top_left", "middle_middle", "bottom_left", null]},
-	"middle_middle": {"pos": Vector2(900, 300), "neighbors": ["top_middle", "middle_right", "bottom_middle", "middle_left"]},
-	"middle_right": {"pos": Vector2(230, 950), "neighbors": ["top_right", null, "bottom_right", "middle_middle"]},
+	"middle_left": {"pos": Vector2i(200, 160), "neighbors": ["top_left", "middle_middle", "bottom_left", null]},
+	"middle_middle": {"pos": Vector2i(900, 300), "neighbors": ["top_middle", "middle_right", "bottom_middle", "middle_left"]},
+	"middle_right": {"pos": Vector2i(230, 950), "neighbors": ["top_right", null, "bottom_right", "middle_middle"]},
 
-	"bottom_left": {"pos": Vector2(783, 147), "neighbors": ["middle_left", "bottom_middle", null, null]},
-	"bottom_middle": {"pos": Vector2(650, 550), "neighbors": ["middle_middle", "bottom_right", null, "bottom_left"]},
-	"bottom_right": {"pos": Vector2(120, 550), "neighbors": ["middle_right", null, null, "bottom_middle"]}
+	"bottom_left": {"pos": Vector2i(783, 147), "neighbors": ["middle_left", "bottom_middle", null, null]},
+	"bottom_middle": {"pos": Vector2i(650, 550), "neighbors": ["middle_middle", "bottom_right", null, "bottom_left"]},
+	"bottom_right": {"pos": Vector2i(120, 550), "neighbors": ["middle_right", null, null, "bottom_middle"]}
 }
 
 var windows_nodes = {}
@@ -29,6 +28,7 @@ func _ready() -> void:
 
 	for window_name in windows.keys():
 		var window = windows[window_name]
+		print(window.pos)
 		windows_nodes[window_name] = _create_window(window.pos, window_name)
 
 	for window_name in windows_nodes.keys():
@@ -46,6 +46,7 @@ func _create_window(window_position, window_name) -> Window:
 	window.name = window_name
 	window.title = window_name
 	window.set_script(EnigmaWindow)
+	print(window_position)
 	window.init(window_position)
 	window.close_requested.connect(_close_game)
 	add_child(window)
